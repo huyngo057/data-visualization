@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Nhóm 8</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarText"
+          aria-controls="navbarText"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Pricing</a>
+            </li>
+          </ul>
+          <span class="navbar-text"> Navbar text with an inline element </span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-4">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas, tempore maiores. Dolorem,
+          reiciendis dicta voluptate nemo, facilis pariatur quas numquam quidem aliquam at ipsum
+          excepturi incidunt debitis beatae dolores exercitationem.
+        </div>
+        <div class="col-8">
+          <div id="chart" class="pt-3 d-flex justify-content-center align-items-center"></div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="./PieChart.js"></script>
+    <script src="./HistoGram.js"></script>
+    <script src="./BarChart.js"></script>
+    <script>
+      // Pie Chart: this pie chart is to show ratio for shop's rating from 5 to 1 start.
+      // Content will be total shop that have the rating and divide in to groups (5-1).
+      // TODO: name will be changed to d.rating, value will be total shop that have that ratings.
+      //   const fetchShops = async () => {
+      //     const resp = await fetch('https://abc-shop.herokuapp.com/shop?limit=50');
+      //     const data = await resp.json();
+      //     const { data: shops } = data;
+      //     const chart = PieChart(shops, {
+      //       name: ({ name }) => name,
+      //       value: ({ rating }) => rating,
+      //       height: 500,
+      //     });
+      //     const container = document.getElementById('chart');
+      //     container.append(chart);
+      //   };
+      //   fetchShops();
+
+      //   const fetchShops = async () => {
+      //     const resp = await fetch('https://abc-shop.herokuapp.com/invoice?limit=20');
+      //     const data = await resp.json();
+      //     const { data: shops } = data;
+      //     const chart = Histogram(shops, {
+      //       value: ({ rating }) => rating,
+      //       label: 'Unemployment rate (%) →',
+      //       color: 'steelblue',
+      //     });
+      //     const container = document.getElementById('chart');
+      //     container.append(chart);
+      //   };
+      //   fetchShops();
+
+      const fetchShops = async () => {
+        const resp = await fetch('https://abc-shop.herokuapp.com/invoice?limit=20');
+        const data = await resp.json();
+        const { data: shops } = data;
+        const chart = BarChart(shops, {
+          x: ({ customerName }) => customerName,
+          y: ({ total }) => total,
+          xDomain: d3.groupSort(
+            shops,
+            ([{ total }]) => -total, // sort by descending frequency
+            ({ customerName }) => customerName
+          ),
+          color: 'steelblue',
+        });
+        const container = document.getElementById('chart');
+        container.append(chart);
+      };
+      fetchShops();
+    </script>
+  </body>
+</html>
