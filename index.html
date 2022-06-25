@@ -63,6 +63,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="./utils.js"></script>
     <script src="./PieChart.js"></script>
     <script src="./HistoGram.js"></script>
     <script src="./BarChart.js"></script>
@@ -97,6 +98,8 @@
       //     container.append(chart);
       //   };
       //   fetchShops();
+
+      console.log(convertDate(618339600000));
 
       const fetchShops = async () => {
         const resp = await fetch('https://abc-shop.herokuapp.com/invoice?limit=20');
