@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<title>Stacked Bar Chart</title>
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+</head>
+
+<!-- Create a div where the graph will take place -->
+<body>
+  <div id="cau_b_1"></div>
+</body>
+<script>
+    // set the dimensions and margins of the graph
+    var margin = {top: 10, right: 30, bottom: 100, left: 50},
+        width = 700 - margin.left - margin.right,
+        height = 700 - margin.top - margin.bottom;
+    
+    // append the svg object to the body of the page
+    let svg = d3.select("#cau_b_1")
+      .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")")
+    
+      svg
+        .append("text")
+        .attr("class", "title")
+        .attr("x", 300)
+        .attr("y", 10)
+        .attr("font-family", "sans-serif")
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .text("The number of sold vs remaining goods");
+
+    // Parse the Data
+    d3.json(`https://abc-shop.herokuapp.com/product?limit=1000`, function(response) {
+      let dataset = response.data;
+      
+      let subgroups = ['sold', 'remain']
+      let groups = [];
+      let resultData = [];
+      let dataset_size = 50//Object.keys(dataset).length / 100;
+      for (let i = 0; i < dataset_size; ++i) {
+        groups.push(dataset[i.toString()]['productName'])
+
+        resultData.push({
+          group: dataset[i.toString()]['productName'],
+          sold: dataset[i.toString()]['sold'],
+          remain: dataset[i.toString()]['stock'] - dataset[i.toString()]['sold']
+        });
+      }
+
+      let stackedSeries = d3.stack().keys(subgroups)(resultData);
+
+      let xScale = d3.scaleBand().domain(groups).range([0, width]).padding([0.2]);
+      let xAxisGenerator = d3.axisBottom(xScale);
+      svg.append("g")
+         .attr("transform", "translate(0," + height + ")")
+         .call(xAxisGenerator.tickFormat([]).tickSizeOuter(0));
+        //  .selectAll('text')
+        //   .attr("transform", "translate(-10,0)rotate(-45)")
+        //   .style("text-anchor", "end");
+
+      let yScale = d3.scaleLinear().domain([0, 1000]).range([height, 0]);
+      svg.append("g")
+         .call(d3.axisLeft(yScale));
+        
+      // console.log('subgroups:', subgroups)
+      // console.log('groups:', groups)
+      // console.log('stackedSeries:', stackedSeries)
+      let color = d3.scaleOrdinal().domain(subgroups).range(['#377eb8', '#e41a1c']);
+
+      // Tooltip
+      let tooltip = d3.select("#cau_b_1")
+                  .append("div")
+                  .style("opacity", 0)
+                  .attr("class", "tooltip")
+                  .style("background-color", "white")
+                  .style("border", "solid")
+                  .style("border-width", "1px")
+                  .style("border-radius", "5px")
+                  .style("padding", "10px")
+
+      // Highlight
+      let mouseover = function(d) {
+          // what subgroup are we hovering?
+          var subgroupName = d3.select(this.parentNode).datum().key; // This was the tricky part
+          var subgroupValue = d.data[subgroupName];
+
+          d3.selectAll(".myRect").style("opacity", 0.2)
+          d3.selectAll("." + subgroupName)
+            .style("opacity", 1)
+          
+          tooltip
+            .html("product: " + d.data.group + "<br>" + subgroupName + ": " + subgroupValue)
+            .style("opacity", 1)
+      }
+
+      let mousemove = function(d) {
+        tooltip
+          .style("left", (d3.mouse(this)[0] + 90) + "px")
+          .style("top", (d3.mouse(this)[1]) + "px")
+      }
+
+      let mouseleave = function(d) {
+        d3.selectAll(".myRect")
+          .style("opacity", 0.8)
+
+        tooltip
+          .style("opacity", 0)
+      }
+
+      svg.append("g")
+        .selectAll("g")
+        .data(stackedSeries)
+        .enter().append("g")
+          .attr("fill", function(d) { return color(d.key); })
+          .attr("class", function(d) { return "myRect " + d.key; })
+          .selectAll("rect")
+          .data(function(d) { return d; })
+          .enter().append("rect")
+            .attr("x", function(d) { return xScale(d.data.group); })
+            .attr("y", function(d) { return yScale(d[1]); })
+            .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
+            .attr("width", xScale.bandwidth())
+            .attr("stroke", "grey")
+        .on('mouseover', mouseover)
+        .on('mousemove', mousemove)
+        .on('mouseleave', mouseleave);
+    });
+    
+</script>
