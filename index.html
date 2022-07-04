@@ -30,16 +30,15 @@
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link active" aria-current="page" href="/cau_b_1.html">b1</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Features</a>
+              <a class="nav-link" href="/cau_b_2.html">b2</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
+              <a class="nav-link" href="/cau_b_3.html">b3</a>
             </li>
           </ul>
-          <span class="navbar-text"> Navbar text with an inline element </span>
         </div>
       </div>
     </nav>
@@ -47,9 +46,7 @@
     <div class="container">
       <div class="row">
         <div class="col-4">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas, tempore maiores. Dolorem,
-          reiciendis dicta voluptate nemo, facilis pariatur quas numquam quidem aliquam at ipsum
-          excepturi incidunt debitis beatae dolores exercitationem.
+          This diagram is showing customer who are buying most items
         </div>
         <div class="col-8">
           <div id="chart" class="pt-3 d-flex justify-content-center align-items-center"></div>
@@ -64,43 +61,9 @@
     ></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="./utils.js"></script>
-    <script src="./PieChart.js"></script>
-    <script src="./HistoGram.js"></script>
     <script src="./BarChart.js"></script>
     <script>
-      // Pie Chart: this pie chart is to show ratio for shop's rating from 5 to 1 start.
-      // Content will be total shop that have the rating and divide in to groups (5-1).
-      // TODO: name will be changed to d.rating, value will be total shop that have that ratings.
-      //   const fetchShops = async () => {
-      //     const resp = await fetch('https://abc-shop.herokuapp.com/shop?limit=50');
-      //     const data = await resp.json();
-      //     const { data: shops } = data;
-      //     const chart = PieChart(shops, {
-      //       name: ({ name }) => name,
-      //       value: ({ rating }) => rating,
-      //       height: 500,
-      //     });
-      //     const container = document.getElementById('chart');
-      //     container.append(chart);
-      //   };
-      //   fetchShops();
-
-      //   const fetchShops = async () => {
-      //     const resp = await fetch('https://abc-shop.herokuapp.com/invoice?limit=20');
-      //     const data = await resp.json();
-      //     const { data: shops } = data;
-      //     const chart = Histogram(shops, {
-      //       value: ({ rating }) => rating,
-      //       label: 'Unemployment rate (%) →',
-      //       color: 'steelblue',
-      //     });
-      //     const container = document.getElementById('chart');
-      //     container.append(chart);
-      //   };
-      //   fetchShops();
-
-      console.log(convertDate(618339600000));
-
+    
       const fetchShops = async () => {
         const resp = await fetch('https://abc-shop.herokuapp.com/invoice?limit=20');
         const data = await resp.json();
